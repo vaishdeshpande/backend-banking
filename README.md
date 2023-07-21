@@ -40,9 +40,6 @@ docker-compose build
 
 docker-compose up -d
 
-```
-
-```
 
 Then you can use following link to use the API
 
