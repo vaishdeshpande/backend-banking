@@ -36,15 +36,21 @@ cd bank-backend
 
 ```
 
+then
+
+```
 docker-compose build
 
 docker-compose up -d
-
+```
 
 Then you can use following link to use the API
 
 ```
-
 http://127.0.0.1:8000/docs
 
+```
+Entrypoint Of the Application:
+```
+main.py
 ```
