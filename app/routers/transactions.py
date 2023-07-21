@@ -18,18 +18,18 @@ withdrawl_validator = WithdrawlValidator()
 transaction_controller = TransactionController(account_repo,deposit_validator,withdrawl_validator)
 
 @router.put("/deposit")
-def deposit(deposit: TransactionModel,db: Session = Depends(get_db)):
-    transaction_controller.deposit(deposit.account_number, deposit.amount,db)
+async def deposit(deposit: TransactionModel,db: Session = Depends(get_db)):
+    await transaction_controller.deposit(deposit.account_number, deposit.amount,db)
     return {"message": "Deposit successful"}
 
 
 @router.put("/withdraw")
-def withdraw(withdraw:TransactionModel,db: Session = Depends(get_db)):
-    transaction_controller.withdraw(withdraw.account_number, withdraw.amount,db)
+async def withdraw(withdraw:TransactionModel,db: Session = Depends(get_db)):
+    await transaction_controller.withdraw(withdraw.account_number, withdraw.amount,db)
     return {"message": "Withdrawal successful"}
 
 
 @router.post("/history")
-def get_transaction_history(transaction_history_request:TransactionHistoryModel,db: Session = Depends(get_db)):
-    transaction_history = transaction_controller.get_transaction_history(transaction_history_request,db)
+async def get_transaction_history(transaction_history_request:TransactionHistoryModel,db: Session = Depends(get_db)):
+    transaction_history = await transaction_controller.get_transaction_history(transaction_history_request,db)
     return transaction_history

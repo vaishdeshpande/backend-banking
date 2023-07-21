@@ -7,7 +7,18 @@ from .config.database import engine
 from .routers import accounts,transactions
 from .models import schemas
 from fastapi.responses import HTMLResponse
+import os
 
+# Create the logs directory if it does not exist
+log_dir = "logs"
+if not os.path.exists(log_dir):
+    os.makedirs(log_dir)
+
+# Create the log file if it does not exist
+log_file = os.path.join(log_dir, "app.log")
+if not os.path.exists(log_file):
+    with open(log_file, "w"):
+        pass
 
 
 schemas.Base.metadata.create_all(bind=engine)

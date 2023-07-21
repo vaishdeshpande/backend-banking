@@ -50,3 +50,8 @@ class MinBalance(HTTPException):
     def __init__(self, min_balance, account_type_name):
         super().__init__(status_code=status.HTTP_400_BAD_REQUEST,
                          detail=f"The system enforces a minimum balance requirement of {min_balance} rupees for {account_type_name} accounts and withdrawals beyond this minimum balance are not permitted.")
+
+class MinimumAverageBalance(HTTPException):
+    def __init__(self):
+        super().__init__(status_code=status.HTTP_400_BAD_REQUEST,
+                         detail="Minimum average balance requirement not met")

@@ -1,3 +1,5 @@
+import os
+import sys
 import logging
 from functools import wraps
 
@@ -20,6 +22,17 @@ def logger_class(func):
         formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
         console_handler.setFormatter(formatter)
         logger.addHandler(console_handler)
+
+        # Add a file handler
+        log_dir = "logs"
+        if not os.path.exists(log_dir):
+            os.makedirs(log_dir)
+
+        log_file = os.path.join(log_dir, "app.log")
+        file_handler = logging.FileHandler(log_file)
+        file_handler.setLevel(logging.INFO)
+        file_handler.setFormatter(formatter)
+        logger.addHandler(file_handler)
 
         try:
             logger.info(f"Executing {func.__name__} with args: {args}, kwargs: {kwargs}")

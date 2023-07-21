@@ -1,12 +1,14 @@
 # app/validators/withdrawl_validator.py
-from datetime import datetime
+from datetime import datetime,timedelta
 from fastapi import FastAPI, HTTPException,status
-from ..exceptions.exception_handler import ExceededMonthlyWithdrawlLimit,MinBalance,InsufficientBalance,AccountDoesNotExists,InvalidWithdrawAmount
+from ..exceptions.exception_handler import MinimumAverageBalance,ExceededMonthlyWithdrawlLimit,MinBalance,InsufficientBalance,AccountDoesNotExists,InvalidWithdrawAmount
 from ..utils.logger import logger_class
-
+from sqlalchemy import func
+from ..models.schemas import Account,Transaction
 @logger_class
 class WithdrawlValidator:
     
+    # Validate all the withdraw requests
     def validate_withdraw_request(self,account,amount,db):
         if account is None:
             raise AccountDoesNotExists()
@@ -15,8 +17,10 @@ class WithdrawlValidator:
         account_type_details = self.account_repo.get_account_type_details(account.account_type_id,db)
         self.validate_max_withdrawl_limit(account,account_type_details,amount)
         self.validate_min_balance(account,account_type_details,amount)
+        self.validate_min_avg_balance(self,account,account_type_details,amount,db)
         return account_type_details
     
+    # Validating max_withdrawl requirement
     def validate_max_withdrawl_limit(self,account,account_type_details,amount):   
         
         if account_type_details.max_withdrawals is not None :
@@ -25,6 +29,7 @@ class WithdrawlValidator:
         
         return True
     
+    # Validating min_balance requirement
     def validate_min_balance(self,account,account_type_details,amount):
 
         min_balance = account_type_details.min_balance
@@ -37,17 +42,22 @@ class WithdrawlValidator:
         
         return True
     
-    def validate_min_avg_balance(self,account,account_type_details,amount):
-        pass
-        # current_month = datetime.now().month
-        # current_year = datetime.now().year
-        # # Check deposit rules
-        # if amount > 50000 and not account.kyc_flag:
-        #     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-        #                     detail=f"KYC is required for deposit amount greater than 50000")
-        # if account_type_details.max_monthly_deposit != None:
-        #     if current_month == account.last_deposit_month and current_year == account.last_deposit_year and account.current_month_deposit + amount > account.account_type_details.max_monthly_deposit:
-        #         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-        #                     detail=f"Deposit amount exceeds the maximum monthly deposit limit for the account")
+    # Calculating the average balance for the ongoing month including the withdrawal
+    def validate_min_avg_balance(self,account,account_type_details,amount,db):
+        first_day_of_month = datetime.today().replace(day=1)
+
+        balance_sum_query = db.query(func.sum(Account.balance)).filter(
+            Account.account_number == account.account_number,
+            Transaction.timestamp >= first_day_of_month
+        )
+
+        total_balance = balance_sum_query.scalar() - amount
+
+        days_passed_in_month = (datetime.today() - first_day_of_month).days + 1
+
         
-        # return True
+        avg_balance = total_balance / days_passed_in_month
+
+        if avg_balance < account_type_details.min_balance:
+            raise MinimumAverageBalance()
+        return True

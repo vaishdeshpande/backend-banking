@@ -2,6 +2,7 @@ from pydantic import BaseModel,Field
 from datetime import datetime,timedelta
 from enum import Enum
 
+# Request Models for API Input
 class AccountModel(BaseModel):
     account_number :str
     balance : float
@@ -11,7 +12,6 @@ class AccountModel(BaseModel):
 class TransactionModel(BaseModel):
     account_number :str
     amount : float
-
 
 
 class TransactionHistoryModel(BaseModel):

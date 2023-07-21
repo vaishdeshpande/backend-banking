@@ -26,8 +26,7 @@ Base = declarative_base()
 
 def get_db():
     up = False
-    while not up:
-    
+    while not up:  
         try:  
             db = SessionLocal() 
             yield db

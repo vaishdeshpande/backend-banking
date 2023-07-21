@@ -14,16 +14,16 @@ class TransactionController:
         self.withdrawl_validator = withdrawl_validator
 
     
-    def deposit(self, account_number: str, amount: int,db):
+    async def deposit(self, account_number: str, amount: int,db):
         try:
             account = self.account_repo.get_account(account_number,db)
             #validate the deposit request
             self.deposit_validator.validate_deposit_request(account,amount,db)
             
-            # Perform the deposit
+            
             account.balance += amount
 
-            #Set the latest month and year in the account 
+            #Updating last_deposit_month and last_deposit_year
             account.last_deposit_month = datetime.now().month
             account.last_deposit_year = datetime.now().year
             
@@ -33,7 +33,7 @@ class TransactionController:
             else:
                 account.current_month_deposit = amount
 
-            # Create transaction record
+            # Creating transaction record
             transaction = Transaction(
                 account_number=account.account_number,
                 type=TransactionType.DEPOSIT,
@@ -42,25 +42,23 @@ class TransactionController:
             )
             account.transactions.append(transaction)
 
-            # Updating the database with changes
             self.account_repo.save_changes(db)
         except HTTPException as httpexc:
             raise httpexc
         except ValueError:
-            # Invalid deposit amount (negative amount or non-numeric)
             raise  InvalidDepositAmount()
         except Exception as e:
             raise InternalServerError("An unexpected error occurred while processing the deposit")
 
 
 
-    def withdraw(self, account_number: str, amount: int,db):
+    async def withdraw(self, account_number: str, amount: int,db):
         try:
             account = self.account_repo.get_account(account_number,db)
-            # Check withdrawal rules and account_type_details
+            #validate the withdraw request
             account_type_details =  self.withdrawl_validator.validate_withdraw_request(account,amount,db)
 
-            # Create transaction record
+            # Creating transaction record
             transaction = Transaction(
                 account_number=account.account_number,
                 type=TransactionType.WITHDRAWAL,
@@ -73,6 +71,7 @@ class TransactionController:
             current_year = datetime.now().year
             if current_month == account.last_withdraw_month and current_year == account.last_withdraw_year:
                 account.current_month_withdraw_count +=1
+                # Adding withdrawl charge if customer exceeded max_withdrawals
                 if account.current_month_withdraw_count > account.account_type_details.max_withdrawals and account_type_details.withdrawal_charge!=None:
                     account.balance -= amount + account.account_type_details.withdrawal_charge
                     transaction.transaction_charge= account_type_details.withdrawal_charge 
@@ -92,9 +91,10 @@ class TransactionController:
         except Exception as e:
             raise InternalServerError("An unexpected error occurred while processing the deposit")
 
-    def get_transaction_history(self, transaction_history_req: TransactionHistoryModel, db, page_size: int = 10):
+    async def get_transaction_history(self, transaction_history_req: TransactionHistoryModel, db, page_size: int = 10):
         
         account =  self.account_repo.get_account(transaction_history_req.account_number,db)
+        # validate account exists
         if account is None:
                 raise AccountDoesNotExists()
         

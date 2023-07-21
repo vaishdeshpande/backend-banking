@@ -7,6 +7,7 @@ from ..utils.logger import logger_class
 @logger_class
 class DepositValidator:
    
+   # Validate all the deposit requests
     def validate_deposit_request(self,account,amount,db):
         if account is None:
             raise AccountDoesNotExists()
@@ -15,7 +16,7 @@ class DepositValidator:
         account_type_details = self.account_repo.get_account_type_details(account.account_type_id,db)
         self.validate_max_deposit(account,account_type_details,amount)
         
-     
+    # Validate max_deposit limit
     def validate_max_deposit(self,account,account_type_details,amount):
         current_month = datetime.now().month
         current_year = datetime.now().year

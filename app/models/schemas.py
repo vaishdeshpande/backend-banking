@@ -6,6 +6,7 @@ from datetime import datetime
 from ..config.database import Base
 from enum import Enum
 
+
 class TransactionType(str, Enum):
     DEPOSIT = "deposit"
     WITHDRAWAL = "withdrawal"
@@ -15,6 +16,7 @@ class AccountType(int, Enum):
     STUDENT = 2
     REGULAR_SAVING = 3
 
+# Database Schemas /Tables
 class Account(Base):
     __tablename__ = "accounts"
 
@@ -42,6 +44,7 @@ class AccountTypeDetails(Base):
     min_balance = Column(Integer,default=None)
     further_withdrawls_blocked = Column(Boolean,default=True)
     withdrawal_charge = Column(Integer,default=None)
+    monthly_average_balance = Column(Float,default=None)
     
 
 

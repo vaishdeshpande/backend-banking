@@ -13,14 +13,14 @@ class AccountController:
     def __init__(self, account_repo: AccountRepository):
         self.account_repo = account_repo
 
-    def create_account(self, accountObj,db: Session):
+    async def create_account(self, accountObj,db: Session):
         try:
-            # Create the account
+            # Creating account
             account_type_details = self.account_repo.get_account_type_details(accountObj.account_type_id,db)
             if not account_type_details:    
                 raise InvalidAccountType()
             
-            # Check if account already exists with account Number 
+            # Validation for account Already Exists 
             if self.account_repo.get_account(accountObj.account_number,db):
                 raise AccountAlreadyExists()
 
