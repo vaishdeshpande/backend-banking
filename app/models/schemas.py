@@ -1,3 +1,6 @@
+"""
+SQLAlchemy models for database tables that correspond to the schemas in postgres
+"""
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey,DateTime,Float ,Enum as EnumColumn
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.expression import text

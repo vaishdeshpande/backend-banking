@@ -1,4 +1,5 @@
 # app/controller/transaction_controller.py
+#responsible for handling transactions, specifically deposits and withdrawals
 from ..models.schemas import Account ,AccountType,Transaction,TransactionType,AccountTypeDetails
 from ..models.models import TransactionHistoryModel
 from datetime import datetime

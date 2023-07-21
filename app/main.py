@@ -1,5 +1,8 @@
-#app/main.py
-
+"""
+app/main.py
+This is the entry point of the application, where the FastAPI app is set up.
+It includes routes for creating, updating, and deleting accounts, as well as for checking account details.
+ """
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, HTTPException, APIRouter,Depends

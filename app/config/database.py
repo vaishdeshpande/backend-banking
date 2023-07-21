@@ -1,4 +1,8 @@
 # app/config/database.py
+"""
+This file configures the connection to the PostgreSQL database using SQLAlchemy. 
+It creates the database engine and a session factory for managing database sessions.
+"""
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker

@@ -1,4 +1,6 @@
 # app/validators/deposit_validator.py
+# Responsible for validating deposit requests and enforcing deposit rules. 
+# It includes methods to validate deposit requests, maximum monthly deposits, and KYC requirements.
 from datetime import datetime
 from fastapi import FastAPI, HTTPException,status
 from ..exceptions.exception_handler import KycRequired,ExceededMonthlyDeposit, AccountDoesNotExists,InvalidDepositAmount

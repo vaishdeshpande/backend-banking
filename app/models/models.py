@@ -1,3 +1,8 @@
+"""
+ Pydantic models (schemas) for various requests entities in the application,
+ accounts, transactions, and account types.
+"""
+
 from pydantic import BaseModel,Field
 from datetime import datetime,timedelta
 from enum import Enum

@@ -1,4 +1,5 @@
 # app/controller/account_controller.py
+# Interacts with the AccountRepository to perform database operations.
 from datetime import datetime
 from fastapi import FastAPI, HTTPException, APIRouter,Depends,status
 from ..models.schemas import Account,AccountTypeDetails
@@ -35,6 +36,7 @@ class AccountController:
                 last_deposit_year = datetime.now().year
             )
             self.account_repo.add_account(new_account,db)
+            logging.info(f'Save to DB') 
             self.account_repo.save_changes(db)
         
         except HTTPException as http_exc:
@@ -46,8 +48,10 @@ class AccountController:
 
     async def add_account_type(self,new_account_type: AccountTypeDetailsMode,db: Session ):
         try:
+            logging.info(f'Create a new Account Type') 
             account_type = AccountTypeDetails( **new_account_type.dict())
             self.account_repo.add_account_type(account_type,db)
+            logging.info(f'Save to DB') 
             self.account_repo.save_changes(db)
             return 
         except HTTPException as http_exc:

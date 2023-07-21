@@ -1,4 +1,9 @@
 # app/validators/withdrawl_validator.py
+"""
+responsible for validating withdrawal requests and enforcing withdrawal rules.
+ It includes methods to validate withdrawal requests,
+ maximum withdrawals in a month, minimum balance requirements, and minimum average balance 
+"""
 from datetime import datetime
 from fastapi import FastAPI, HTTPException,status
 from ..exceptions.exception_handler import MinimumAverageBalance,ExceededMonthlyWithdrawlLimit,MinBalance,InsufficientBalance,AccountDoesNotExists,InvalidWithdrawAmount

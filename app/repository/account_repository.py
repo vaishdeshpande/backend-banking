@@ -1,4 +1,8 @@
 # app/repository/account_repository.py
+"""
+Handling transactions, specifically deposits and withdrawals. 
+Interacts with the AccountRepository and includes methods for performing these operations.
+"""
 from fastapi import FastAPI, HTTPException, APIRouter,Depends
 from ..config.database import get_db
 from ..models.schemas import Account,AccountTypeDetails,Transaction
@@ -34,10 +38,10 @@ class AccountRepository:
     
     def get_transactions_by_date_range_paginated(self, account_number: str, from_date: str, to_date: str, db: Session,page:int ,page_size:int = 10):
         logging.info(f'get_transactions_by_date_range_paginated')
-        # Query to count the total number of transactions within the date range
+        
         count_query = db.query(func.count(Transaction.id)).filter(Transaction.account_number ==  account_number)
 
-        # Query to fetch the paginated transactions within the date range
+        
         query = db.query(Transaction).filter(Transaction.account_number == account_number)
 
         if from_date:
@@ -50,18 +54,17 @@ class AccountRepository:
 
         total_transactions = count_query.scalar()
 
-        # Calculate the total number of pages
+        logging.info(f'Calculate the total number of pages') 
         total_pages = (total_transactions + page_size - 1) // page_size
 
-        # Handle edge cases for page parameter
+        logging.info(f'Handle edge cases for page parameter') 
         if page < 1 :
             logging.error(f'Page:{page},Total_pages:{total_pages}')
             raise HTTPException(status_code=400, detail="Invalid page number.")
 
-        # Calculate the offset to fetch the correct page of records
         offset = (page - 1) * page_size
 
-        # Limit the number of records and fetch the transactions
+        logging.info(f'Limit the number of records and fetch the transactions')
         transactions = query.order_by(Transaction.timestamp).limit(page_size).all()
 
         return transactions, total_transactions,total_pages

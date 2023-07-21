@@ -1,5 +1,7 @@
 # Backend bank transactions by using FastAPI
 
+The application is developed using FastAPI and PostgreSQL. It allows users to perform various banking operations, such as creating accounts, making deposits, and performing withdrawals. The system is organized into several files, each serving a specific purpose which is mentioned as comments at the top.
+
 ##### This API has 5 routes
 
 #### 1) Create Account (Post route)
@@ -32,7 +34,7 @@ then
 
 ```
 
-cd bank-backend
+cd backend-banking
 
 ```
 
@@ -50,7 +52,9 @@ Then you can use following link to use the API
 http://127.0.0.1:8000/docs
 
 ```
+
 Entrypoint Of the Application:
+
 ```
 main.py
 ```
