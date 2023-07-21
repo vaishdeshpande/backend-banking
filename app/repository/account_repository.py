@@ -1,3 +1,4 @@
+# app/repository/account_repository.py
 from fastapi import FastAPI, HTTPException, APIRouter,Depends
 from ..config.database import get_db
 from ..models.schemas import Account,AccountTypeDetails,Transaction
@@ -25,6 +26,9 @@ class AccountRepository:
     
     def add_account(self, account: Account, db: Session):
         db.add(account)
+
+    def add_account_type(self, account_type_details: AccountTypeDetails, db: Session):
+        db.add(account_type_details)
     
     def get_transactions_by_date_range_paginated(self, account_number: str, from_date: str, to_date: str, db: Session,page:int ,page_size:int = 10):
         

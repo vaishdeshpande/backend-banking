@@ -4,10 +4,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, HTTPException, APIRouter,Depends
 from .config.database import engine
-from .config.settings import settings
 from .routers import accounts,transactions
 from .models import schemas
 from fastapi.responses import HTMLResponse
+
+
 
 schemas.Base.metadata.create_all(bind=engine)
 app = FastAPI()

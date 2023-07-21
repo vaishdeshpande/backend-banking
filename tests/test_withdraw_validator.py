@@ -1,13 +1,12 @@
 import pytest
 from datetime import datetime
 from unittest.mock import MagicMock
-from utils.logger import logger_class
-from exceptions.exception_handler import (
+from app.exceptions.exception_handler import (
     ExceededMonthlyWithdrawlLimit, MinBalance, InsufficientBalance, AccountDoesNotExists, InvalidWithdrawAmount
 )
-from models.schemas import AccountTypeDetails, Account
-from validators.withdrawl_validator import WithdrawlValidator
-from repository.account_repository import AccountRepository
+from app.models.schemas import AccountTypeDetails, Account
+from app.validators.withdrawl_validator import WithdrawlValidator
+from app.repository.account_repository import AccountRepository
 
 @pytest.fixture
 def mock_data():
@@ -70,6 +69,7 @@ def test_validate_withdraw_request_valid(mock_data):
     result = withdrawl_validator.validate_withdraw_request(account_mock, amount, db_mock)
     assert result == mock_data['account_type_details_mock']
 
+
 def test_validate_withdraw_request_invalid_account(mock_data):
     # Test when the account does not exist
     db_mock = mock_data['db_mock']
@@ -77,6 +77,7 @@ def test_validate_withdraw_request_invalid_account(mock_data):
 
     with pytest.raises(AccountDoesNotExists):
         withdrawl_validator.validate_withdraw_request(None, 1000, db_mock)
+
 
 def test_validate_withdraw_request_invalid_amount(mock_data):
     # Test when the withdrawal amount is negative
@@ -86,6 +87,7 @@ def test_validate_withdraw_request_invalid_amount(mock_data):
 
     with pytest.raises(InvalidWithdrawAmount):
         withdrawl_validator.validate_withdraw_request(account_mock, -500, db_mock)
+
 
 def test_validate_withdraw_request_exceeded_monthly_limit(mock_data):
     # Test when the monthly withdrawal limit is exceeded
@@ -97,6 +99,7 @@ def test_validate_withdraw_request_exceeded_monthly_limit(mock_data):
 
     with pytest.raises(ExceededMonthlyWithdrawlLimit):
         withdrawl_validator.validate_withdraw_request(account_mock, 1000, db_mock)
+
 
 def test_validate_withdraw_request_min_balance(mock_data):
     # Test when the balance after withdrawal is less than the minimum balance requirement

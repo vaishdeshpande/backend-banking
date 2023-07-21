@@ -35,7 +35,7 @@ class Account(Base):
 class AccountTypeDetails(Base):
     __tablename__ = "account_type_details"
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True,autoincrement=True)
     account_type_name = Column(String)
     max_monthly_deposit = Column(Integer,default=None)
     max_withdrawals = Column(Integer,default=None)

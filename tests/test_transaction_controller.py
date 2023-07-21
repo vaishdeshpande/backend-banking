@@ -3,13 +3,12 @@
 import pytest
 from datetime import datetime
 from unittest.mock import MagicMock
-from models.schemas import AccountTypeDetails, Account
-from models.models import TransactionHistoryModel
-from controller.transaction_controller import TransactionController
-from repository.account_repository import AccountRepository
-from validators.deposit_validator import DepositValidator
-from validators.withdrawl_validator import WithdrawlValidator
-
+from app.models.schemas import AccountTypeDetails, Account
+from app.models.models import TransactionHistoryModel
+from app.controller.transaction_controller import TransactionController
+from app.repository.account_repository import AccountRepository
+from app.validators.deposit_validator import DepositValidator
+from app.validators.withdrawl_validator import WithdrawlValidator
 
 
 @pytest.fixture
@@ -87,6 +86,7 @@ def test_deposit_success(mock_data):
     # Check if the balance is updated correctly after the deposit
     assert account_mock.balance == initial_balance + amount
 
+
 def test_withdraw_success(mock_data):
     account_number = mock_data['account_number']
     amount = mock_data['amount']
@@ -103,6 +103,7 @@ def test_withdraw_success(mock_data):
 
     # Check if the balance is updated correctly after the deposit
     assert account_mock.balance == initial_balance - amount
+
 
 def test_get_transaction_history_account_exists(mock_data):
     # Extract the required data from the mock_data fixture

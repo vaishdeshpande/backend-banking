@@ -1,10 +1,9 @@
 import pytest
 from datetime import datetime
 from unittest.mock import MagicMock
-from utils.logger import logger_class
-from exceptions.exception_handler import KycRequired, ExceededMonthlyDeposit, AccountDoesNotExists, InvalidDepositAmount
-from models.schemas import AccountTypeDetails, Account
-from validators.deposit_validator import DepositValidator
+from app.exceptions.exception_handler import KycRequired, ExceededMonthlyDeposit, AccountDoesNotExists, InvalidDepositAmount
+from app.models.schemas import AccountTypeDetails, Account
+from app.validators.deposit_validator import DepositValidator
 
 @pytest.fixture
 def deposit_validator(account_repo_mock, account_mock, account_type_details_mock):
@@ -12,6 +11,7 @@ def deposit_validator(account_repo_mock, account_mock, account_type_details_mock
     deposit_validator.account_repo = account_repo_mock
     account_repo_mock.get_account_type_details.return_value = account_type_details_mock
     return deposit_validator
+
 
 @pytest.fixture
 def account_mock():
@@ -24,6 +24,7 @@ def account_mock():
         last_deposit_month=datetime.now().month,
         last_deposit_year=datetime.now().year,
     )
+
 
 @pytest.fixture
 def account_type_details_mock(account_repo_mock):
@@ -38,6 +39,7 @@ def account_type_details_mock(account_repo_mock):
     )
     account_repo_mock.get_account_type_details.return_value = account_type_details_mock
     return account_type_details_mock
+
 
 @pytest.fixture
 def account_repo_mock():
@@ -63,6 +65,7 @@ def account_repo_mock():
 #     amount = 10000
 #     assert deposit_validator.validate_deposit_request(account_mock, amount, db_mock) is True
 
+
 def test_validate_deposit_request_invalid(deposit_validator, account_mock):
     # Test when the account is None
     db_mock = MagicMock()
@@ -70,12 +73,14 @@ def test_validate_deposit_request_invalid(deposit_validator, account_mock):
     with pytest.raises(AccountDoesNotExists):
         deposit_validator.validate_deposit_request(None, amount, db_mock)
 
+
 def test_validate_deposit_request_negative_amount(deposit_validator, account_mock):
     # Test when the deposit amount is negative
     db_mock = MagicMock()
     amount = -10000
     with pytest.raises(InvalidDepositAmount):
         deposit_validator.validate_deposit_request(account_mock, amount, db_mock)
+
 
 def test_validate_deposit_request_kyc_required(deposit_validator, account_mock):
     # Test when the deposit amount exceeds the KYC limit
