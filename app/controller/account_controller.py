@@ -14,7 +14,7 @@ class AccountController:
     def __init__(self, account_repo: AccountRepository):
         self.account_repo = account_repo
 
-    def create_account(self, accountObj,db: Session):
+    async def create_account(self, accountObj,db: Session):
         try:
             logging.info(f'Create the account') 
             account_type_details = self.account_repo.get_account_type_details(accountObj.account_type_id,db)
@@ -44,7 +44,7 @@ class AccountController:
             logging.error(e)
             raise InternalServerError("An unexpected error occurred while creation of the account")
 
-    def add_account_type(self,new_account_type: AccountTypeDetailsMode,db: Session ):
+    async def add_account_type(self,new_account_type: AccountTypeDetailsMode,db: Session ):
         try:
             account_type = AccountTypeDetails( **new_account_type.dict())
             self.account_repo.add_account_type(account_type,db)

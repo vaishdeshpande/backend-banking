@@ -54,7 +54,7 @@ class AccountRepository:
         total_pages = (total_transactions + page_size - 1) // page_size
 
         # Handle edge cases for page parameter
-        if page < 1 or page > total_pages:
+        if page < 1 :
             logging.error(f'Page:{page},Total_pages:{total_pages}')
             raise HTTPException(status_code=400, detail="Invalid page number.")
 

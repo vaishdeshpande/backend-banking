@@ -16,8 +16,8 @@ class TransactionModel(BaseModel):
 
 class TransactionHistoryModel(BaseModel):
     account_number :str
-    from_date: datetime = Field(default=datetime.today().replace(day=1))
-    to_date: datetime = Field(default=datetime.today())
+    from_date: datetime = Field(default=datetime.now().replace(day=1))
+    to_date: datetime = Field(default=datetime.now())
     page:int=1
     
 class AccountTypeDetailsMode(BaseModel):

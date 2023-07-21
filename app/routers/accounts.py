@@ -16,15 +16,15 @@ account_repo = AccountRepository()
 account_controller = AccountController(account_repo)
 
 @router.post("/create")
-def create_account(account: AccountModel,db: Session = Depends(get_db)):
+async def create_account(account: AccountModel,db: Session = Depends(get_db)):
     
-    account_controller.create_account(account,db)
+    await account_controller.create_account(account,db)
     return {"message": "Account created successfully"}
 
 @router.post("/addAccountType")
-def add_account_type(account_type: AccountTypeDetailsMode,db: Session = Depends(get_db)):
+async def add_account_type(account_type: AccountTypeDetailsMode,db: Session = Depends(get_db)):
     
-    account_controller.add_account_type(account_type,db)
+    await account_controller.add_account_type(account_type,db)
     return {"message": "Account Type added successfully"}
 
 

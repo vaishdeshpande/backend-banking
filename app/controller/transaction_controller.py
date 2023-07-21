@@ -16,7 +16,7 @@ class TransactionController:
         self.deposit_validator = DepositValidator()
         self.withdrawl_validator = WithdrawlValidator()
 
-    def deposit(self, account_number: str, amount: int,db):
+    async def deposit(self, account_number: str, amount: int,db):
         try:
             logging.info(f'validate the deposit request')
             account = self.account_repo.get_account(account_number,db)
@@ -64,7 +64,7 @@ class TransactionController:
 
 
 
-    def withdraw(self, account_number: str, amount: int,db):
+    async def withdraw(self, account_number: str, amount: int,db):
         try:
             account = self.account_repo.get_account(account_number,db)
             # Check withdrawal rules and account_type_details
@@ -104,7 +104,7 @@ class TransactionController:
             logging.error(e)
             raise InternalServerError("An unexpected error occurred while processing the withdraw")
 
-    def get_transaction_history(self, transaction_history_req: TransactionHistoryModel, db, page_size: int = 10):
+    async def get_transaction_history(self, transaction_history_req: TransactionHistoryModel, db, page_size: int = 10):
         
         account =  self.account_repo.get_account(transaction_history_req.account_number,db)
         if account is None:
