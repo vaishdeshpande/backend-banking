@@ -1,0 +1,21 @@
+{
+  "ZERO_BALANCE": {
+    "account_type_name": "ZERO_BALANCE",
+    "max_withdrawals": 4,
+    "further_withdrawls_blocked": true
+  },
+  "STUDENT": {
+    "account_type_name": "STUDENT",
+    "max_monthly_deposit": 10000,
+    "max_withdrawals": 4,
+    "min_balance": 1000,
+    "further_withdrawls_blocked": true
+  },
+  "REGULAR_SAVINGS": {
+    "account_type_name": "REGULAR_SAVINGS",
+    "max_withdrawals": 10,
+    "further_withdrawls_blocked": false,
+    "withdrawal_charge": 5,
+    "monthly_avg_balance": 5000
+  }
+}
