@@ -52,9 +52,7 @@ def mock_data():
     withdrawl_validator_mock = MagicMock(spec=WithdrawlValidator)
 
     # Create the TransactionController using the mocks
-    transaction_controller = TransactionController(
-        account_repo_mock, deposit_validator_mock, withdrawl_validator_mock
-    )
+    transaction_controller = TransactionController()
 
     # Return the mock data and TransactionController as a dictionary
     return {

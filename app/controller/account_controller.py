@@ -7,6 +7,7 @@ from ..repository.account_repository import AccountRepository
 from ..exceptions.exception_handler import InvalidAccountType,AccountAlreadyExists,InternalServerError
 from sqlalchemy.orm import Session
 from ..utils.logger import logger_class
+import logging 
 
 @logger_class
 class AccountController:
@@ -15,12 +16,12 @@ class AccountController:
 
     def create_account(self, accountObj,db: Session):
         try:
-            # Create the account
+            logging.info(f'Create the account') 
             account_type_details = self.account_repo.get_account_type_details(accountObj.account_type_id,db)
             if not account_type_details:    
                 raise InvalidAccountType()
             
-            # Check if account already exists with account Number 
+            logging.info(f' Check if account already exists with account Number') 
             if self.account_repo.get_account(accountObj.account_number,db):
                 raise AccountAlreadyExists()
 
@@ -40,9 +41,10 @@ class AccountController:
             raise http_exc
 
         except Exception as e:
+            logging.error(e)
             raise InternalServerError("An unexpected error occurred while creation of the account")
 
-    async def add_account_type(self,new_account_type: AccountTypeDetailsMode,db: Session ):
+    def add_account_type(self,new_account_type: AccountTypeDetailsMode,db: Session ):
         try:
             account_type = AccountTypeDetails( **new_account_type.dict())
             self.account_repo.add_account_type(account_type,db)
@@ -52,7 +54,8 @@ class AccountController:
             raise http_exc
 
         except Exception as e:
-            raise HTTPException("An unexpected error occurred while creation of new accountType")
+            logging.error(e)
+            raise InternalServerError("An unexpected error occurred while creation of new accountType")
 
 
 

@@ -5,11 +5,10 @@ def logger_class(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         if 'self' in kwargs:
-            # Logging for class methods
             cls = kwargs['self'].__class__.__name__
             logger = logging.getLogger(f"{cls}.{func.__name__}")
         else:
-            # Logging for regular functions
+
             logger = logging.getLogger(func.__module__)
 
         logger.setLevel(logging.INFO)

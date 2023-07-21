@@ -24,7 +24,7 @@ class InvalidDepositAmount(HTTPException):
 class InvalidWithdrawAmount(HTTPException):
     def __init__(self):
         super().__init__(status_code=status.HTTP_400_BAD_REQUEST,
-                         detail="Invalid withdrawal amount. Amount must be a positive numeric value.")
+                         detail="Invalid withdrawal amount. Amount must be a positive numeric value and greater than account balance")
 
 class KycRequired(HTTPException):
     def __init__(self):
@@ -45,6 +45,11 @@ class InsufficientBalance(HTTPException):
     def __init__(self):
         super().__init__(status_code=status.HTTP_400_BAD_REQUEST,
                          detail="Account does not have sufficient balance")
+
+class MinimumAverageBalance(HTTPException):
+    def __init__(self):
+        super().__init__(status_code=status.HTTP_400_BAD_REQUEST,
+                         detail="The system enforces a minimum average monthly balance requirement")
 
 class MinBalance(HTTPException):
     def __init__(self, min_balance, account_type_name):

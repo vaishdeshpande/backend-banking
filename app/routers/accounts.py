@@ -22,9 +22,9 @@ def create_account(account: AccountModel,db: Session = Depends(get_db)):
     return {"message": "Account created successfully"}
 
 @router.post("/addAccountType")
-async def add_account_type(account_type: AccountTypeDetailsMode,db: Session = Depends(get_db)):
+def add_account_type(account_type: AccountTypeDetailsMode,db: Session = Depends(get_db)):
     
-    await account_controller.add_account_type(account_type,db)
+    account_controller.add_account_type(account_type,db)
     return {"message": "Account Type added successfully"}
 
 

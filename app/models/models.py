@@ -28,5 +28,6 @@ class AccountTypeDetailsMode(BaseModel):
     min_balance : int = None
     further_withdrawls_blocked :bool =True
     withdrawal_charge :int = None
+    monthly_avg_balance :int = None
 
     

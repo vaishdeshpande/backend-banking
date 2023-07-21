@@ -42,6 +42,7 @@ class AccountTypeDetails(Base):
     min_balance = Column(Integer,default=None)
     further_withdrawls_blocked = Column(Boolean,default=True)
     withdrawal_charge = Column(Integer,default=None)
+    monthly_avg_balance = Column(Integer,default=None)
     
 
 

@@ -5,27 +5,32 @@ from datetime import datetime
 from fastapi import FastAPI, HTTPException, APIRouter,Depends,status
 from ..exceptions.exception_handler import InternalServerError,InvalidDepositAmount,AccountDoesNotExists
 from ..utils.logger import logger_class
-
+import logging
+from ..repository.account_repository import AccountRepository
+from ..validators.deposit_validator import DepositValidator
+from ..validators.withdrawl_validator import WithdrawlValidator
 @logger_class
 class TransactionController:
-    def __init__(self,account_repo,deposit_validator,withdrawl_validator):
-        self.account_repo = account_repo
-        self.deposit_validator = deposit_validator
-        self.withdrawl_validator = withdrawl_validator
+    def __init__(self):
+        self.account_repo = AccountRepository()
+        self.deposit_validator = DepositValidator()
+        self.withdrawl_validator = WithdrawlValidator()
 
-    
     def deposit(self, account_number: str, amount: int,db):
         try:
+            logging.info(f'validate the deposit request')
             account = self.account_repo.get_account(account_number,db)
             #validate the deposit request
             self.deposit_validator.validate_deposit_request(account,amount,db)
             
+            logging.info(f'# Perform the deposit')
             # Perform the deposit
             account.balance += amount
 
             #Set the latest month and year in the account 
             account.last_deposit_month = datetime.now().month
             account.last_deposit_year = datetime.now().year
+            logging.info(f'Set current month deposit')
             
             #Set current month deposit
             if datetime.now().month == account.last_deposit_month and datetime.now().year == account.last_deposit_year:
@@ -33,6 +38,7 @@ class TransactionController:
             else:
                 account.current_month_deposit = amount
 
+            logging.info(f'Create transaction record')
             # Create transaction record
             transaction = Transaction(
                 account_number=account.account_number,
@@ -42,14 +48,18 @@ class TransactionController:
             )
             account.transactions.append(transaction)
 
+            balance = account.balance
+            logging.info(f'Updating the database with changes')
             # Updating the database with changes
             self.account_repo.save_changes(db)
+            return balance
         except HTTPException as httpexc:
             raise httpexc
         except ValueError:
             # Invalid deposit amount (negative amount or non-numeric)
             raise  InvalidDepositAmount()
         except Exception as e:
+            logging.error(e)
             raise InternalServerError("An unexpected error occurred while processing the deposit")
 
 
@@ -84,13 +94,15 @@ class TransactionController:
                 account.last_withdraw_year = current_year
 
             account.transactions.append(transaction)
-
+            balance = account.balance
             self.account_repo.save_changes(db)
+            return balance
         except HTTPException as httpexc:
             raise httpexc
         
         except Exception as e:
-            raise InternalServerError("An unexpected error occurred while processing the deposit")
+            logging.error(e)
+            raise InternalServerError("An unexpected error occurred while processing the withdraw")
 
     def get_transaction_history(self, transaction_history_req: TransactionHistoryModel, db, page_size: int = 10):
         
