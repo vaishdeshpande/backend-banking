@@ -1,24 +1,24 @@
 # Backend bank transactions by using FastAPI
 
-#### This API has 5 routes
+##### This API has 5 routes
 
-## 1) Create Account (Post route)
+#### 1) Create Account (Post route)
 
-#### This route is reponsible for creating post, deleting post, updating post and Checkinh post
+##### This route is reponsible for creating post, deleting post, updating post and Checkinh post
 
-## 2) Add Account Type (Post route)
+#### 2) Add Account Type (Post route)
 
-#### This route is about creating users and searching user by id
+##### This route is about creating users and searching user by id
 
-## 3) Deposit (PUT route)
+#### 3) Deposit (PUT route)
 
-#### This route is about login system
+##### This route is about login system
 
-## 4) Withdraw (PUT route)
+#### 4) Withdraw (PUT route)
 
-#### This route is about likes or vote system and this route contain code for upvote or back vote there is not logic about down vote
+##### This route is about likes or vote system and this route contain code for upvote or back vote there is not logic about down vote
 
-# how to run locally
+#### how to run locally
 
 First clone this repo by using following command
 
